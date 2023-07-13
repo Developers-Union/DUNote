@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DuNote</title>
+    <script src="https://unpkg.com/femd@2.1.0/femd.js"></script>
+    <style>
+        .container {
+            display: flex;
+        }
+        
+        .editor-column {
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .editor {
+            width: calc(100% - 20px);
+            height: 400px;
+            resize: vertical;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+        #markd {
+            font-family: Consolas, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, sans-serif;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 19px;
+            letter-spacing: 0px;
+            cursor: text;
+            outline: 0;
+            flex: 1;
+            padding: 10px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #markd:hover {
+            border-color: #B721FF;
+            box-shadow: 0 0 5px #B721FF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="editor-column">
+            <textarea id="markd" class="editor" placeholder="这里写笔记..."></textarea>
+        </div>
+        <div class="editor-column">
+            <div id="result" class="editor"></div>
+        </div>
+    </div>
+    <script>
+        console.log=()=>0;
+        document.getElementById("markd").oninput=()=>{
+            var h={a:[257,225,462,224],e:[275,233,283,232],i:[299,237,464,236],o:[333,243,466,242],u:[363,250,468,249],v:[470,472,474,476,252]};
+            new Femd(document.getElementById("markd").value).toDOM({
+                block:[[/[a|e|i|o|u|v][0-3]/g,k=>String.fromCharCode(h[k[0][0]][k[0][1]])],["v4",l=>String.fromCharCode(h.v[4])],
+                    [/ *bilibili +(https\:\/\/www\.bilibili\.com\/video\/[A-z0-9=&?%_\-\.\/]+?) *</g,k=>`<iframe src="https://player.bilibili.com/player.html?bvid=${k[1].match(/video\/[A-z0-9]+?\//g)[0].slice(6,-1)}&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`]]
+            }).mount("#result")
+        }
+    </script>
+</body>
+</html>
